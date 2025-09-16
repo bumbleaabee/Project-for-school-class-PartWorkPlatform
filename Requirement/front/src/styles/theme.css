@@ -1,0 +1,169 @@
+:root {
+  --brand-1: #409eff; /* Element Plus primary */
+  --brand-2: #36cfc9;
+  --brand-3: #9254de;
+  --bg-1: #0f172a; /* slate-900 */
+  --bg-2: #111827; /* gray-900 */
+  --text-1: #1f2937;
+  --text-2: #6b7280;
+  --card-bg: #ffffff;
+  --shadow-1: 0 6px 24px rgba(0,0,0,.08), 0 2px 8px rgba(0,0,0,.04);
+  --shadow-2: 0 12px 40px rgba(0,0,0,.12), 0 4px 14px rgba(0,0,0,.06);
+}
+
+/* App background with a subtle animated gradient overlay */
+html, body, #app { height: 100%; }
+body {
+  margin: 0;
+  background: radial-gradient(1200px 600px at 80% -10%, rgba(64,158,255,.10), transparent 60%),
+              radial-gradient(1000px 600px at -10% 110%, rgba(146,84,222,.10), transparent 60%),
+              linear-gradient(180deg, #f7fafc 0%, #f2f6ff 100%);
+  background-attachment: fixed;
+}
+
+/* Header with gradient and subtle glassy feel */
+.app-header {
+  background: linear-gradient(90deg, rgba(64,158,255,.18), rgba(54,207,201,.14));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 16px rgba(0,0,0,.06);
+  border-bottom: 1px solid rgba(255,255,255,.35);
+}
+
+/* 让菜单透明，露出 header 的渐变底色 */
+.el-menu--horizontal {
+  background-color: transparent !important;
+}
+.el-menu--popup, .el-menu--popup-container { background-color: rgba(255,255,255,.92) !important; backdrop-filter: blur(6px); }
+
+/* Hero header for pages */
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  border-radius: 14px;
+  background: linear-gradient(120deg, rgba(64,158,255,.14), rgba(146,84,222,.12), rgba(54,207,201,.12));
+  box-shadow: var(--shadow-1);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  background: radial-gradient(600px 220px at 10% 0%, rgba(64,158,255,.08), transparent 60%),
+              radial-gradient(520px 200px at 90% 100%, rgba(54,207,201,.08), transparent 60%);
+  animation: heroGlow 6s ease-in-out infinite alternate;
+}
+.hero > * { position: relative; z-index: 1; }
+.hero-title { font-size: 18px; font-weight: 700; color: #1f2937; letter-spacing: .2px; }
+.hero-subtitle { font-size: 13px; color: #6b7280; }
+.hero-icon { width: 28px; height: 28px; display:flex; align-items:center; justify-content:center; color: var(--brand-1); }
+.hero-icon svg { width: 24px; height: 24px; filter: drop-shadow(0 2px 6px rgba(64,158,255,.35)); animation: floatY 3.6s ease-in-out infinite; }
+
+@keyframes heroGlow { from { transform: translateY(0); } to { transform: translateY(-6px); } }
+@keyframes floatY { 0%{ transform: translateY(0); } 50%{ transform: translateY(-3px); } 100%{ transform: translateY(0); } }
+
+/* Make top menu items a bit more interactive */
+.el-menu--horizontal > .el-menu-item {
+  transition: color .15s ease, background-color .15s ease;
+  position: relative;
+}
+.el-menu--horizontal > .el-menu-item::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 4px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--brand-1), var(--brand-3));
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform .18s ease;
+  border-radius: 2px;
+}
+.el-menu--horizontal > .el-menu-item.is-active::after,
+.el-menu--horizontal > .el-menu-item:hover::after {
+  transform: scaleX(1);
+}
+
+/* 移除 Element Plus 自带活动条，避免双下划线重叠 */
+.el-menu--horizontal { border-bottom: 0 !important; }
+.el-menu--horizontal>.el-menu-item { border-bottom: 2px solid transparent !important; }
+.el-menu--horizontal>.el-menu-item.is-active,
+.el-menu--horizontal>.el-menu-item:hover,
+.el-menu--horizontal>.el-menu-item:focus { border-bottom-color: transparent !important; }
+
+/* 让菜单与页面更协调：颜色与留白微调 */
+.el-menu--horizontal>.el-menu-item {
+  color: #374151;
+  padding: 0 18px !important;
+}
+.el-menu--horizontal>.el-menu-item.is-active {
+  color: #2563eb;
+}
+
+/* Cards: rounded, static (no hover animation) */
+.el-card {
+  border-radius: 12px !important;
+  box-shadow: var(--shadow-1);
+}
+/* 取消悬停的动态效果 */
+.el-card:hover { transform: none; box-shadow: var(--shadow-1); }
+
+/* Unified card header & divider style */
+.el-card__header {
+  padding: 12px 16px !important;
+  font-weight: 600;
+  color: #1f2937;
+  border-bottom: none !important;
+  position: relative;
+}
+.el-card__header::after{
+  content: '';
+  position: absolute; left: 16px; right: 16px; bottom: 8px; height: 2px;
+  background: linear-gradient(90deg, rgba(64,158,255,.35), rgba(146,84,222,.35));
+  border-radius: 2px;
+}
+.el-divider { margin: 12px 0; }
+
+/* Buttons: micro-interaction */
+.el-button { transition: transform .12s ease, box-shadow .12s ease; }
+.el-button:not(.is-disabled):hover { transform: translateY(-1px); }
+
+/* Tables: improve hover readability */
+.el-table .el-table__body tr:hover > td {
+  background-color: rgba(64,158,255,.06) !important;
+}
+
+/* Pagination: slight spacing */
+.el-pagination { gap: 6px; }
+
+/* Router view fade transition */
+.view-fade-enter-active, .view-fade-leave-active { transition: opacity .18s ease; }
+.view-fade-enter-from, .view-fade-leave-to { opacity: 0; }
+
+/* Login page background helper (optional) */
+.login-wrapper {
+  background:
+    radial-gradient(800px 360px at 10% -10%, rgba(54,207,201,.12), transparent 60%),
+    radial-gradient(720px 360px at 90% 110%, rgba(146,84,222,.10), transparent 60%),
+    linear-gradient(180deg, #f7fafc 0%, #f2f6ff 100%);
+}
+
+/* Ripple effect for buttons */
+.ripple-container { position: relative; overflow: hidden; }
+.ripple {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: rgba(64,158,255,.25);
+  transform: scale(0);
+  animation: ripple .6s ease-out;
+}
+@keyframes ripple {
+  to { transform: scale(3); opacity: 0; }
+}
+
+/* Icon micro-animations */
+.icon-pulse { animation: iconPulse 1.6s ease-in-out infinite; }
+@keyframes iconPulse { 0%{ transform: scale(1);} 50%{ transform: scale(1.05);} 100%{ transform: scale(1);} }

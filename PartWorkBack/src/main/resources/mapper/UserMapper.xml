@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.campus.partworkback.mapper.UserMapper">
+    <select id="getById" resultType="org.campus.partworkback.pojo.User">
+        SELECT 
+            id,
+            email,
+            phone,
+            nickname,
+            school,
+            grade,
+            skills,
+            credit_score,
+            created_at,
+            updated_at
+        FROM user
+        WHERE id = #{id};
+    </select>
+
+    <update id="updateById">
+        UPDATE user
+        <set>
+            <if test="nickname != null">
+                nickname = #{nickname},
+            </if>
+            <if test="school != null">
+                school = #{school},
+            </if>
+            <if test="grade != null">
+                grade = #{grade},
+            </if>
+            <if test="skills != null">
+                skills = #{skills},
+            </if>
+            <if test="nickname != null or school != null or grade != null">
+                updated_at = NOW()
+            </if>
+        </set>
+        WHERE id = #{id};
+    </update>
+
+    <!-- 改为动态统计，避免 user_stats 未及时维护导致数值不变化 -->
+    <select id="getUsById" resultType="org.campus.partworkback.pojo.UserStats">
+        <!-- SELECT user_id,
+               tasks_published,
+               tasks_finished,
+               IFNULL(avg_rating,0)
+        FROM user_stats
+        WHERE user_id = #{userId}; -->
+
+        SELECT
+            #{userId} AS user_id,
+            (
+                SELECT COUNT(*)
+                FROM task
+                WHERE publisher_id = #{userId}
+            ) AS tasks_published,
+            (
+                SELECT COUNT(*)
+                FROM task
+                WHERE publisher_id = #{userId}
+                  AND status = 5
+            ) AS tasks_finished,
+            IFNULL((
+                       SELECT ROUND(AVG(rating),2)
+                       FROM review
+                       WHERE target_user_id = #{userId}
+                   ), 0) AS avg_rating,
+            NOW() AS updated_at
+    </select>
+
+    <resultMap id="ReviewResultMap" type="org.campus.partworkback.pojo.Review">
+        <result column="id" property="id"/>
+        <result column="task_id" property="taskId"/>
+        <result column="reviewer_id" property="reviewerId"/>
+        <result column="target_user_id" property="targetUserId"/>
+        <result column="rating" property="rating"/>
+        <result column="content" property="content"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+    <select id="getReviewById" resultMap="ReviewResultMap">
+        SELECT id, task_id, reviewer_id, target_user_id, rating, content, created_at
+        FROM review
+        WHERE target_user_id = #{id}
+        ORDER BY created_at DESC
+            LIMIT #{offset}, #{pageSize};
+    </select>
+
+    <select id="getCountReview">
+        SELECT COUNT(*)
+        FROM review
+        WHERE target_user_id = #{id}
+    </select>
+
+    <insert id="addAvatarUrl">
+        INSERT INTO user_avatar (user_id, url)
+        VALUES (#{userId}, #{url})
+            ON DUPLICATE KEY UPDATE
+            url = VALUES(url),
+            updated_at = CURRENT_TIMESTAMP
+    </insert>
+
+    <insert id="addUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (nickname, password_hash, email) VALUES (#{nickname}, "$2a$10$xxxx", #{email})
+    </insert>
+</mapper>

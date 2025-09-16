@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.campus.partworkback.mapper.LoginMapper">
+    <select id="getAccount" resultType="java.lang.Long">
+        select id from account where username = #{username} and password = #{password}
+    </select>
+
+    <select id="getAvatar">
+        SELECT url FROM user_avatar WHERE user_id = #{userId}
+    </select>
+
+    <insert id="addAccount">
+        INSERT INTO account (id, username, password) VALUES (#{id}, #{username}, #{password})
+    </insert>
+
+    <select id="getAllUsername">
+        SELECT username FROM account
+    </select>
+
+    <select id="getPassword">
+        SELECT password FROM account WHERE id = #{userId}
+    </select>
+
+    <update id="setPassword">
+        UPDATE account
+        SET password = #{newPassword}
+        WHERE id = #{userId}
+    </update>
+</mapper>

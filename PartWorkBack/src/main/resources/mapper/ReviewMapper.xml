@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.campus.partworkback.mapper.ReviewMapper">
+    <insert id="addReview">
+        INSERT INTO review(task_id, reviewer_id, target_user_id, rating, content, created_at)
+        VALUES(#{taskId}, #{reviewerId}, #{targetUserId}, #{rating}, #{content}, NOW());
+    </insert>
+
+    <resultMap id="ReviewDataMap" type="org.campus.partworkback.pojo.ReviewData">
+        <id property="id" column="id"/>
+        <result property="taskId" column="taskId"/>
+        <result property="fromUserId" column="fromUserId"/>
+        <result property="rating" column="rating"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="createdAt"/>
+        <!-- 如果需要返回taskTitle，可以添加这个字段到DTO中 -->
+        <!-- <result property="taskTitle" column="taskTitle"/> -->
+    </resultMap>
+
+    <select id="getReview" resultMap="ReviewDataMap">
+        SELECT
+        r.id,
+        r.task_id AS taskId,
+        r.reviewer_id AS fromUserId,
+        r.rating,
+        r.content,
+        r.created_at AS createdAt
+        <!-- 如果需要taskTitle，取消注释下面这行 -->
+        , t.title AS taskTitle
+        FROM review r
+        <!-- 如果需要taskTitle，取消注释下面这行 -->
+        LEFT JOIN task t ON r.task_id = t.id
+        WHERE r.target_user_id = #{id}
+        ORDER BY r.created_at DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="getAllReview">
+        SELECT COUNT(*)
+        FROM review r
+        <!-- 如果需要taskTitle，取消注释下面这行 -->
+        LEFT JOIN task t ON r.task_id = t.id
+        WHERE r.target_user_id = #{id}
+    </select>
+
+    <select id="getTargetId">
+        SELECT chosen_applicant_id FROM task WHERE id = #{taskId}
+    </select>
+
+    <select id="getPublisherId">
+        SELECT publisher_id FROM task WHERE id = #{taskId}
+    </select>
+
+    <select id="getTaskStatus" resultType="java.lang.Integer">
+        SELECT status FROM task WHERE id = #{taskId}
+    </select>
+
+    <select id="getAllApplicantId" resultType="java.lang.Long">
+        SELECT chosen_applicant_id FROM task where publisher_id = #{reviewerId} AND status = 5
+    </select>
+</mapper>
