@@ -49,36 +49,51 @@
       </el-card>
     </div>
 
-    <!-- 右列：编辑区 -->
-    <div class="col">
-      <el-card shadow="never" header="修改资料" :body-style="{padding:'16px'}">
-        <el-form :model="form" label-width="70px" @submit.prevent>
-          <el-form-item label="昵称"><el-input v-model="form.nickname" /></el-form-item>
-          <el-form-item label="学校"><el-input v-model="form.school" /></el-form-item>
-            <el-form-item label="年级"><el-input v-model="form.grade" /></el-form-item>
-          <el-form-item>
-            <el-button type="primary" :loading="loadingProfile" @click="submitProfile">保存</el-button>
-            <el-button @click="resetProfile" :disabled="loadingProfile">重置</el-button>
-          </el-form-item>
-        </el-form>
-      </el-card>
+    <!-- 右列：编辑区（合并为选项卡，避免过长） -->
+    <div class="col right-col">
+      <el-card class="settings-card" shadow="never" header="账户设置" :body-style="{padding:'12px 16px'}">
+        <el-tabs type="border-card">
+          <el-tab-pane>
+            <template #label>
+              <span class="tab-label"><span class="tab-icon">📝</span><span>资料</span></span>
+            </template>
+            <el-form :model="form" label-width="70px" @submit.prevent>
+              <el-form-item label="昵称"><el-input v-model="form.nickname" /></el-form-item>
+              <el-form-item label="学校"><el-input v-model="form.school" /></el-form-item>
+              <el-form-item label="年级"><el-input v-model="form.grade" /></el-form-item>
+              <el-form-item>
+                <el-button type="primary" :loading="loadingProfile" @click="submitProfile">保存</el-button>
+                <el-button @click="resetProfile" :disabled="loadingProfile">重置</el-button>
+              </el-form-item>
+            </el-form>
+            <div class="hint">完善资料有助于平台更好地为你推荐任务。</div>
+          </el-tab-pane>
 
-      <el-card style="margin-top:16px" shadow="never" header="头像设置" :body-style="{padding:'16px'}">
-        <el-upload
-          class="avatar-uploader"
-          :show-file-list="false"
-          :before-upload="beforeAvatarUpload"
-          :http-request="doAvatarUpload"
-          accept="image/*"
-        >
-          <el-avatar :size="96" :src="auth.user?.avatarUrl" style="border:2px dashed var(--el-border-color);">
-            {{ avatarInitial }}
-          </el-avatar>
-        </el-upload>
-  <div style="color:#999; font-size:12px; margin-top:8px;">点击头像上传，建议尺寸 ≥ 200x200，大小 ≤ 10MB，格式 JPG/PNG</div>
-      </el-card>
+          <el-tab-pane>
+            <template #label>
+              <span class="tab-label"><span class="tab-icon">🖼️</span><span>头像</span></span>
+            </template>
+            <div style="display:flex; align-items:center; gap:16px;">
+              <el-upload
+                class="avatar-uploader"
+                :show-file-list="false"
+                :before-upload="beforeAvatarUpload"
+                :http-request="doAvatarUpload"
+                accept="image/*"
+              >
+                <el-avatar :size="96" :src="auth.user?.avatarUrl" style="border:2px dashed var(--el-border-color);">
+                  {{ avatarInitial }}
+                </el-avatar>
+              </el-upload>
+              <div style="color:#999; font-size:12px;">建议 ≥ 200x200，≤ 10MB，JPG/PNG</div>
+            </div>
+            <div class="hint">清晰的头像有助于让合作方更快认识你。</div>
+          </el-tab-pane>
 
-          <el-card style="margin-top:16px" shadow="never" header="简历（PDF）" :body-style="{padding:'16px'}">
+          <el-tab-pane>
+            <template #label>
+              <span class="tab-label"><span class="tab-icon">📎</span><span>简历</span></span>
+            </template>
             <div style="display:flex; align-items:center; gap:12px;">
               <el-upload
                 :show-file-list="false"
@@ -94,9 +109,13 @@
               <div v-else style="font-size:13px;color:#999;">尚未上传简历</div>
             </div>
             <div style="color:#999; font-size:12px; margin-top:8px;">仅支持 PDF，大小 ≤ 10MB</div>
-          </el-card>
+            <div class="hint">建议突出技能关键词，利于任务匹配与筛选。</div>
+          </el-tab-pane>
 
-      <el-card style="margin-top:16px" shadow="never" header="修改密码" :body-style="{padding:'16px'}">
+          <el-tab-pane>
+            <template #label>
+              <span class="tab-label"><span class="tab-icon">🔒</span><span>密码</span></span>
+            </template>
             <el-form :model="pwdForm" label-width="90px" @submit.prevent>
               <el-form-item label="旧密码"><el-input v-model="pwdForm.oldPassword" type="password" show-password /></el-form-item>
               <el-form-item label="新密码"><el-input v-model="pwdForm.newPassword" type="password" show-password /></el-form-item>
@@ -106,19 +125,51 @@
                 <el-button @click="resetPassword" :disabled="loadingPwd">重置</el-button>
               </el-form-item>
             </el-form>
-            <div style="color:#999; font-size:12px;">成功修改后建议重新登录以确保安全。</div>
-          </el-card>
+            <div style="color:#999; font-size:12px;">修改成功后建议重新登录。</div>
+            <div class="hint">为账号安全，建议定期更新密码并开启强口令。</div>
+          </el-tab-pane>
 
-      <el-card style="margin-top:16px" shadow="never" header="技能维护" :body-style="{padding:'16px'}">
-        <el-form :model="skillsForm" label-width="70px" @submit.prevent>
-          <el-form-item label="技能"><el-input v-model="skillsForm.skillsJoin" placeholder="逗号分隔" /></el-form-item>
-          <el-form-item>
-            <el-button type="primary" :loading="loadingSkills" @click="submitSkills">更新</el-button>
-            <el-button @click="resetSkills" :disabled="loadingSkills">重置</el-button>
-          </el-form-item>
-        </el-form>
+          <el-tab-pane>
+            <template #label>
+              <span class="tab-label"><span class="tab-icon">✨</span><span>技能</span></span>
+            </template>
+            <el-form :model="skillsForm" label-width="70px" @submit.prevent>
+              <el-form-item label="技能"><el-input v-model="skillsForm.skillsJoin" placeholder="逗号分隔" /></el-form-item>
+              <el-form-item>
+                <el-button type="primary" :loading="loadingSkills" @click="submitSkills">更新</el-button>
+                <el-button @click="resetSkills" :disabled="loadingSkills">重置</el-button>
+              </el-form-item>
+            </el-form>
+            <div class="hint">技能标签将用于“AI 推荐”与搜索筛选，提高曝光度。</div>
+          </el-tab-pane>
+        </el-tabs>
+        <!-- 右侧底部装饰区域：渐变条 + 浮动光球 + 斜向扫光，仅视觉效果 -->
+        <div class="settings-decor">
+          <div class="gradient-bar"></div>
+          <span class="orb o1" aria-hidden="true"></span>
+          <span class="orb o2" aria-hidden="true"></span>
+          <span class="orb o3" aria-hidden="true"></span>
+          <span class="orb o4" aria-hidden="true"></span>
+          <span class="shine-line" aria-hidden="true"></span>
+        </div>
+        <!-- 追加底部装饰层-2：细网格 + 波形 + 星光闪烁（仅视觉） -->
+        <div class="settings-decor-2">
+          <div class="grid-overlay"></div>
+          <svg class="wave" viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="gradWave" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.18"/>
+                <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.18"/>
+                <stop offset="100%" stop-color="#22c55e" stop-opacity="0.18"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,30 C150,90 350,0 600,60 C850,120 1050,20 1200,50 L1200,120 L0,120 Z" fill="url(#gradWave)" />
+          </svg>
+          <span class="spark sp1" aria-hidden="true"></span>
+          <span class="spark sp2" aria-hidden="true"></span>
+          <span class="spark sp3" aria-hidden="true"></span>
+        </div>
       </el-card>
-
     </div>
   </div>
 
@@ -272,7 +323,7 @@ async function loadStats(){
 async function loadReviews(){
   if(!auth.user) return;
   loadingReviews.value = true;
-  try { const data = await getUserReviews(auth.user.id, { pageNo:1, pageSize:5 }); reviews.value = data?.list||[]; }
+  try { const data = await getUserReviews(auth.user.id, { pageNo:1, pageSize:3 }); reviews.value = data?.list||[]; }
   catch(_){}
   finally { loadingReviews.value=false; }
 }
@@ -309,14 +360,93 @@ function normalizeStats(s){
 <style scoped>
 .profile-wrap {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 12px auto;
   padding: 0 12px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 12px;
 }
-.col { min-width: 320px; }
+.col { min-width: 320px; display: flex; flex-direction: column; }
+.right-col { }
+.settings-card { flex: 1; display: flex; flex-direction: column; }
+.settings-card :deep(.el-card__body) { flex: 1; display: flex; flex-direction: column; }
+.settings-card :deep(.el-tabs) { flex: 1; display: flex; flex-direction: column; }
+.settings-card :deep(.el-tabs__content) { flex: 1; display: flex; }
+.settings-card :deep(.el-tab-pane) { flex: 1; display: flex; flex-direction: column; }
+
+/* 右侧卡片的轻量渐变背景与边框虚化，丰富视觉层次 */
+.settings-card {
+  background:
+    radial-gradient(1200px 300px at 100% -20%, rgba(124,58,237,0.08), transparent 60%),
+    radial-gradient(900px 300px at -10% 120%, rgba(34,197,94,0.06), transparent 60%);
+  border: 1px solid var(--el-border-color-lighter);
+}
+
+/* 标签带图标与对齐优化 */
+.tab-label { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.tab-icon { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1)); }
+
+/* 小提示文案，弱化色彩 */
+.hint { margin-top: 8px; font-size: 12px; color: #8b8b8b; }
+
+/* 右侧底部装饰：渐变条 + 浮动光球 + 扫光 */
+.settings-decor {
+  position: relative;
+  margin-top: 12px;
+  height: 56px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(90deg, rgba(124,58,237,0.10), rgba(6,182,212,0.10), rgba(34,197,94,0.10));
+}
+.settings-decor .gradient-bar {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #7c3aed, #06b6d4, #22c55e);
+  filter: blur(0.5px);
+}
+.orb { position: absolute; width: 14px; height: 14px; border-radius: 50%; opacity: .9; }
+.o1 { left: 12%; top: 12px; background: radial-gradient(circle at 30% 30%, #7c3aed, rgba(124,58,237,0.3)); animation: floatY 4s ease-in-out infinite; }
+.o2 { left: 38%; top: 22px; background: radial-gradient(circle at 30% 30%, #06b6d4, rgba(6,182,212,0.3)); animation: floatY 5s 0.2s ease-in-out infinite; }
+.o3 { left: 64%; top: 10px; background: radial-gradient(circle at 30% 30%, #22c55e, rgba(34,197,94,0.3)); animation: floatY 4.5s 0.1s ease-in-out infinite; }
+.o4 { left: 82%; top: 18px; background: radial-gradient(circle at 30% 30%, #f59e0b, rgba(245,158,11,0.3)); animation: floatY 5.2s 0.3s ease-in-out infinite; }
+
+@keyframes floatY { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+.shine-line {
+  position: absolute;
+  top: -120%; left: -30%;
+  width: 40%; height: 300%; transform: rotate(25deg);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.18) 50%, rgba(255,255,255,0) 100%);
+  animation: sweep 3.5s linear infinite;
+}
+@keyframes sweep { 0% { left: -40%; } 100% { left: 120%; } }
+
+/* 追加底部装饰层-2 */
+.settings-decor-2 {
+  position: relative;
+  margin-top: 10px;
+  height: 72px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(255,255,255,0.65), rgba(255,255,255,0.85));
+  border: 1px solid var(--el-border-color-lighter);
+}
+.settings-decor-2 .grid-overlay {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 14px 14px;
+  opacity: .8;
+}
+.settings-decor-2 .wave {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  width: 100%; height: 44px;
+}
+.spark { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle, #fff, rgba(255,255,255,0)); box-shadow: 0 0 12px rgba(255,255,255,0.8); opacity: .85; animation: twinkle 2.2s infinite ease-in-out; }
+.sp1 { left: 18%; top: 18px; animation-delay: .1s; }
+.sp2 { left: 52%; top: 10px; animation-delay: .8s; }
+.sp3 { left: 82%; top: 22px; animation-delay: 1.3s; }
+@keyframes twinkle { 0%, 100% { transform: scale(0.8); opacity: .5; } 50% { transform: scale(1.1); opacity: 1; } }
 
 @media (max-width: 960px) {
   .profile-wrap { grid-template-columns: 1fr; }

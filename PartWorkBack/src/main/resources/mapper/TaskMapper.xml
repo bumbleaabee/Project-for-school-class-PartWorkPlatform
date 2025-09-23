@@ -316,4 +316,11 @@
           AND id &lt;&gt; #{applicationId}
           AND `status` = 0
     </update>
+
+    <select id="getTaskList" resultType="org.campus.partworkback.VO.TaskVO">
+        select id, description, tags from task
+                where publisher_id != #{userId}
+                and (chosen_applicant_id != #{userId} or chosen_applicant_id is null)
+                and status = 2;
+    </select>
 </mapper>

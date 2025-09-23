@@ -37,4 +37,5 @@ public class User {
     private Integer creditScore = 60;
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
+    private boolean admin = false;
 }

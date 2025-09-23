@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.campus.partworkback.mapper.AdminMapper">
+    <select id="getTask">
+        SELECT *
+        FROM ${type}
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
+    <select id="getTaskCnt">
+        SELECT COUNT(*)
+        FROM ${type}
+    </select>
+
+    <select id="selectAll" resultType="map">
+        select * from ${type}
+    </select>
+
+    <select id="getAllAdmin" resultType="org.campus.partworkback.pojo.Account">
+        SELECT a.*
+        FROM account a
+        INNER JOIN user u ON a.id = u.id
+        WHERE u.admin = true;
+    </select>
+
+    <update id="addAdmin">
+        update user set admin = true where id = #{userId}
+    </update>
+
+    <update id="removeAdmin">
+        update user set admin = false where id = #{userId}
+    </update>
+</mapper>

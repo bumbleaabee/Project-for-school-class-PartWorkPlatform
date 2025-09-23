@@ -34,6 +34,17 @@
       <el-form-item>
   <el-button class="ripple-container" @click="goPublish">发布任务</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button type="success" class="ripple-container ai-btn" @click="goAi">
+          <span class="ai-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M8.5 3.5l1.2 2.9c.2.5.7.8 1.2.8h3c.7 0 1 .8.5 1.3l-2.4 2.4c-.4.4-.5 1-.3 1.5l1.2 3c.3.7-.5 1.4-1.1.9l-2.7-1.9c-.5-.3-1.1-.3-1.6 0l-2.7 1.9c-.6.5-1.4-.2-1.1-.9l1.2-3c.2-.5.1-1.1-.3-1.5L1.9 8.5c-.5-.5-.1-1.3.5-1.3h3c.6 0 1-.3 1.2-.8l1.2-2.9c.2-.7 1.3-.7 1.5 0z"/>
+            </svg>
+          </span>
+          <span class="ai-text">AI 推荐</span>
+          <span class="shine" aria-hidden="true"></span>
+        </el-button>
+      </el-form-item>
       <el-form-item label="申请附言">
         <el-input v-model="userCtx.message" placeholder="申请理由(可选)" style="width:180px" />
       </el-form-item>
@@ -62,8 +73,22 @@
         </div>
       </div>
       <div class="card-actions">
-        <el-button size="small" type="primary" class="ripple-container" @click="apply(item)" v-if="!appliedIds.includes(item.id)">申请</el-button>
-        <el-button size="small" type="warning" class="ripple-container" @click="withdraw(item)" v-else>撤回</el-button>
+        <!-- 仅当未申请且任务未完成时显示“申请” -->
+        <el-button
+          size="small"
+          type="primary"
+          class="ripple-container"
+          @click="apply(item)"
+          v-if="!appliedIds.includes(item.id) && item?.status !== 5"
+        >申请</el-button>
+        <!-- 仅当该任务在“我申请中(待处理)”列表里时显示“撤回” -->
+        <el-button
+          size="small"
+          type="warning"
+          class="ripple-container"
+          @click="withdraw(item)"
+          v-if="appliedIds.includes(item.id)"
+        >撤回</el-button>
       </div>
     </el-card>
   </div>
@@ -201,6 +226,13 @@ async function withdraw(row){
 function goPublish(){
   router.push('/publish');
 }
+function goAi(){
+  router.push('/ai/recommend');
+}
+
+// 按钮渲染逻辑已内联至模板：
+// - 申请：!appliedIds.includes(id) && status !== 5
+// - 撤回：appliedIds.includes(id)
 
 onMounted(load);
 
@@ -254,4 +286,47 @@ function handleSizeChange(s){
 .meta-key { color: var(--el-text-color-secondary); }
 .meta-val { color: var(--el-text-color-primary); font-weight: 500; }
 .card-actions { margin-top: 12px; display: flex; gap: 8px; }
+
+/* AI 推荐按钮特效 */
+.ai-btn {
+  position: relative;
+  overflow: hidden;
+  border: none;
+  color: #fff !important;
+  background: linear-gradient(135deg, #7c3aed 0%, #06b6d4 50%, #22c55e 100%);
+  background-size: 200% 200%;
+  box-shadow: 0 6px 20px rgba(124,58,237,0.35), 0 2px 8px rgba(34,197,94,0.2);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.ai-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 10px 28px rgba(124,58,237,0.5), 0 4px 14px rgba(34,197,94,0.3);
+  animation: aiGradient 2.5s ease infinite;
+}
+.ai-btn:active { transform: translateY(0) scale(0.99); }
+
+.ai-icon { display: inline-flex; margin-right: 6px; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2)); }
+.ai-text { letter-spacing: .5px; font-weight: 600; }
+
+/* 斜向闪光 */
+.shine {
+  position: absolute;
+  top: -150%;
+  left: -50%;
+  width: 50%;
+  height: 300%;
+  transform: rotate(25deg);
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.22) 50%, rgba(255,255,255,0) 100%);
+  transition: left .5s ease, top .5s ease;
+}
+.ai-btn:hover .shine {
+  left: 120%;
+  top: -120%;
+}
+
+@keyframes aiGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 </style>

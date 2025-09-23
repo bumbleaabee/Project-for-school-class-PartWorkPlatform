@@ -22,4 +22,6 @@ public interface UserMapper {
     void addAvatarUrl(Long userId, String url);
 
     void addUser(User user);
+
+    String getDescription(Long userId);
 }

@@ -9,6 +9,7 @@
           <el-menu-item index="/ongoing">进行中</el-menu-item>
           <el-menu-item index="/accepted">我接的单</el-menu-item>
           <el-menu-item index="/review">评价</el-menu-item>
+          <el-menu-item v-if="isAdmin" index="/admin">管理</el-menu-item>
         </el-menu>
         <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
           <template v-if="auth.token">
@@ -36,6 +37,7 @@ const route = useRoute();
 const router = useRouter();
 const auth = useAuthStore();
 const user = computed(()=> auth.user);
+const isAdmin = computed(()=> !!auth.user?.admin);
 const active = computed(()=>
   route.path.startsWith('/publish') ? '/publish'
   : route.path.startsWith('/my') ? '/my'

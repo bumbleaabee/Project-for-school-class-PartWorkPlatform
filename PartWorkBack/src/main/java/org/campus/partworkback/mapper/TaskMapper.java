@@ -2,6 +2,7 @@ package org.campus.partworkback.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.campus.partworkback.DTO.TaskApplicationDTO;
+import org.campus.partworkback.VO.TaskVO;
 import org.campus.partworkback.pojo.Task;
 
 import java.util.List;
@@ -53,4 +54,6 @@ public interface TaskMapper {
     List<Long> getChangeButton(Long userId);
 
     void updateTaskByIdRefuse(Long id, Long applicationId);
+
+    List<TaskVO> getTaskList(Long userId);
 }

@@ -12,7 +12,8 @@
             skills,
             credit_score,
             created_at,
-            updated_at
+            updated_at,
+            admin
         FROM user
         WHERE id = #{id};
     </select>
@@ -103,4 +104,8 @@
     <insert id="addUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO user (nickname, password_hash, email) VALUES (#{nickname}, "$2a$10$xxxx", #{email})
     </insert>
+
+    <select id="getDescription">
+        select skills from user where id = #{userId}
+    </select>
 </mapper>
