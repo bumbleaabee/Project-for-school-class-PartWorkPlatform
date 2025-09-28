@@ -1,5 +1,6 @@
 package org.campus.partworkback.Service.impl;
 
+import org.campus.partworkback.DTO.RequestDTO;
 import org.campus.partworkback.DTO.TaskApplicationDTO;
 import org.campus.partworkback.DTO.TaskDTO;
 import org.campus.partworkback.Service.TaskService;
@@ -134,5 +135,10 @@ WHERE task_id = #{id} AND id <> #{applicationId} AND status = 0;
     @Override
     public List<Long> getChangeButton(Long userId) {
         return taskMapper.getChangeButton(userId);
+    }
+
+    @Override
+    public List<RequestDTO> getApplyRequestById(Long userId) {
+        return taskMapper.getApplyRequestById(userId);
     }
 }

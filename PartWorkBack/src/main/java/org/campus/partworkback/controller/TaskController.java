@@ -1,10 +1,7 @@
 package org.campus.partworkback.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.campus.partworkback.DTO.ChooseDTO;
-import org.campus.partworkback.DTO.TaskApplicationDTO;
-import org.campus.partworkback.DTO.TaskDTO;
-import org.campus.partworkback.DTO.TaskPublishDTO;
+import org.campus.partworkback.DTO.*;
 import org.campus.partworkback.Service.TaskService;
 import org.campus.partworkback.pojo.Result;
 import org.campus.partworkback.pojo.Task;
@@ -130,6 +127,13 @@ public class TaskController {
     public Result getChangeButton(HttpServletRequest request){
         Long userId = (Long) request.getAttribute("currentUserId");
         List<Long> list = taskService.getChangeButton(userId);
+        return Result.success(list);
+    }
+
+    @GetMapping("/finish-requests")
+    public Result getFinishRequest(HttpServletRequest request){
+        Long userId = (Long) request.getAttribute("currentUserId");
+        List<RequestDTO> list = taskService.getApplyRequestById(userId);
         return Result.success(list);
     }
 }

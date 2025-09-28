@@ -1,6 +1,7 @@
 package org.campus.partworkback.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.campus.partworkback.DTO.RequestDTO;
 import org.campus.partworkback.DTO.TaskApplicationDTO;
 import org.campus.partworkback.VO.TaskVO;
 import org.campus.partworkback.pojo.Task;
@@ -56,4 +57,6 @@ public interface TaskMapper {
     void updateTaskByIdRefuse(Long id, Long applicationId);
 
     List<TaskVO> getTaskList(Long userId);
+
+    List<RequestDTO> getApplyRequestById(Long userId);
 }

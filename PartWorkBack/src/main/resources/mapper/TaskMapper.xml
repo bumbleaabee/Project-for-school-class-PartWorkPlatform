@@ -323,4 +323,20 @@
                 and (chosen_applicant_id != #{userId} or chosen_applicant_id is null)
                 and status = 2;
     </select>
+
+    <!-- <select id="getApplyRequestById" resultType="org.campus.partworkback.DTO.RequestDTO">
+        select t.user_id userId, u.nickname nickname, t.task_id taskId from task_finish_request t
+                 left join user u on t.user_id = u.id
+                 where t.user_id = #{userId} and t.status = 0
+    </select> -->
+    <select id="getApplyRequestById" resultType="org.campus.partworkback.DTO.RequestDTO">
+        SELECT
+            tfr.user_id AS userId,
+            u.nickname,
+            tfr.task_id AS taskId
+        FROM task_finish_request tfr
+                 JOIN task t ON tfr.task_id = t.id
+                 JOIN user u ON tfr.user_id = u.id
+        WHERE t.publisher_id = #{userId} and tfr.status = 0
+    </select>
 </mapper>

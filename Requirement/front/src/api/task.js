@@ -53,3 +53,11 @@ export function listMyAccepted(params){
 export function listMyAppliedTaskIds(){
   return http.get('/tasks/my-applied-ids');
 }
+
+// 卖家查看买家提交的验收请求（无分页）
+// 期望后端返回：
+// { code:0, data:{ list:[ { userId, nickname, taskId, taskTitle?, status?, createdAt? } ] } }
+// 也兼容：data 直接为数组或单对象
+export function listFinishRequests(){
+  return http.get('/tasks/finish-requests');
+}

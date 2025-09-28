@@ -79,7 +79,7 @@
               </el-form-item>
               <div class="form-row minor">
                 <el-checkbox v-model="rememberMe">记住我</el-checkbox>
-                <a class="link" @click.prevent>忘记密码?</a>
+                <!-- 已按需求移除找回密码入口 -->
               </div>
               <el-button type="primary" class="btn-cta" native-type="submit" :loading="loading">
                 <span>登录</span>
@@ -113,14 +113,7 @@
           </el-tab-pane>
         </el-tabs>
 
-        <div class="socials">
-          <span class="hint">更多登录方式（敬请期待）</span>
-          <div class="icons">
-            <i class="i wx"></i>
-            <i class="i qq"></i>
-            <i class="i github"></i>
-          </div>
-        </div>
+        <!-- 已移除“更多登录方式”占位区 -->
       </el-card>
     </div>
   </div>

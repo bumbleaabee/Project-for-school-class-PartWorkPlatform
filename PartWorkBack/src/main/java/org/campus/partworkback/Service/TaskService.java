@@ -1,5 +1,6 @@
 package org.campus.partworkback.Service;
 
+import org.campus.partworkback.DTO.RequestDTO;
 import org.campus.partworkback.DTO.TaskApplicationDTO;
 import org.campus.partworkback.DTO.TaskDTO;
 import org.campus.partworkback.pojo.Task;
@@ -36,4 +37,6 @@ public interface TaskService {
     void applyFinish(Long userId, Long id);
 
     List<Long> getChangeButton(Long userId);
+
+    List<RequestDTO> getApplyRequestById(Long userId);
 }
