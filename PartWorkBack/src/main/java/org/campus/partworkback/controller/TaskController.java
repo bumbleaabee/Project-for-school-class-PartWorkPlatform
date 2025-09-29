@@ -7,11 +7,13 @@ import org.campus.partworkback.pojo.Result;
 import org.campus.partworkback.pojo.Task;
 import org.campus.partworkback.pojo.TaskApplication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
 
+@Transactional
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {

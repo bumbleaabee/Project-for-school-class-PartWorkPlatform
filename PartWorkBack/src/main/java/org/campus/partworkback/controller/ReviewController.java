@@ -5,8 +5,10 @@ import org.campus.partworkback.Service.ReviewService;
 import org.campus.partworkback.pojo.Result;
 import org.campus.partworkback.pojo.Review;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+@Transactional
 @RestController
 @RequestMapping("/api/reviews")
 public class ReviewController {

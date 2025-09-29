@@ -7,6 +7,7 @@ import org.campus.partworkback.Service.AIService;
 import org.campus.partworkback.pojo.Result;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import reactor.core.publisher.Flux;
 
 import java.util.List;
 
+@Transactional
 @RestController
 @RequestMapping("/api/ai")
 @RequiredArgsConstructor

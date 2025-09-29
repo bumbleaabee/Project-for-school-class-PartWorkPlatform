@@ -8,6 +8,7 @@ import org.campus.partworkback.exception.BizException;
 import org.campus.partworkback.pojo.Account;
 import org.campus.partworkback.pojo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Transactional
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {

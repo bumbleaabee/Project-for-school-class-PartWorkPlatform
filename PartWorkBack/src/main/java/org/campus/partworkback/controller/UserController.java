@@ -10,12 +10,14 @@ import org.campus.partworkback.pojo.Result;
 import org.campus.partworkback.pojo.User;
 import org.campus.partworkback.pojo.UserStats;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 
+@Transactional
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
